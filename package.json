@@ -1,7 +1,7 @@
 {
   "name": "daping",
   "version": "1.0.0",
-  "description": "大屏可视化项目 - Vue3 + autofit.js",
+  "description": "内部培训学习平台",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -9,10 +9,13 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@element-plus/icons-vue": "^2.3.2",
     "autofit.js": "^2.0.3",
     "echarts": "^5.6.0",
     "echarts-gl": "^2.0.9",
-    "vue": "^3.5.13"
+    "element-plus": "^2.13.4",
+    "vue": "^3.5.13",
+    "vue-router": "^4.6.4"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^5.2.1",

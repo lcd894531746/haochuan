@@ -42,7 +42,7 @@
       </div>
 
       <div class="element-table-wrap">
-        <el-table :data="users" class="element-table" border stripe height="100%">
+        <el-table :data="users" class="element-table" border stripe height="100%" @row-click="onRowClick">
           <el-table-column type="index" label="序号" width="64" />
           <el-table-column prop="name" label="姓名" min-width="100" />
           <el-table-column prop="idNo" label="身份证号" min-width="160" show-overflow-tooltip />
@@ -54,11 +54,14 @@
               <el-tag :type="row.stateType" effect="light" size="small">{{ row.state }}</el-tag>
             </template>
           </el-table-column>
-          <el-table-column label="操作" width="220" fixed="right" align="center">
+          <el-table-column label="操作" width="280" fixed="right" align="center">
             <template #default="{ row }">
-              <el-button link type="primary" @click="openEdit(row)">编辑</el-button>
-              <el-button link type="danger" @click="onDelete(row)">删除</el-button>
-              <el-button link type="primary" @click="openAuthorize(row)">授权</el-button>
+              <span class="op-buttons-wrap" @click.stop>
+                <el-button link type="primary" @click="openEdit(row)">编辑</el-button>
+                <el-button link type="danger" @click="onDelete(row)">删除</el-button>
+                <el-button link type="primary" @click="openAuthorize(row)">授权</el-button>
+                <el-button link type="warning" @click="onResetPassword(row)">重置密码</el-button>
+              </span>
             </template>
           </el-table-column>
         </el-table>
@@ -77,15 +80,35 @@
     </article>
 
     <aside class="user-permissions-side detail-panel-wrap">
+      <!-- 行数据详情（点击行时展示） -->
+      <div v-if="panelMode === 'detail'" class="surface-card side-panel-mod detail-panel">
+        <div class="detail-panel-head">
+          <h3 class="side-panel-title">用户详情</h3>
+          <el-button link type="info" @click="closePanel">关闭</el-button>
+        </div>
+        <div v-if="detailUser" class="detail-form">
+          <div class="detail-readonly-item"><span class="detail-form-label">姓名</span><span>{{ detailUser.name }}</span></div>
+          <div class="detail-readonly-item"><span class="detail-form-label">身份证号</span><span>{{ detailUser.idNo }}</span></div>
+          <div class="detail-readonly-item"><span class="detail-form-label">部门</span><span>{{ detailUser.department }}</span></div>
+          <div class="detail-readonly-item"><span class="detail-form-label">岗位</span><span>{{ detailUser.position }}</span></div>
+          <div class="detail-readonly-item"><span class="detail-form-label">角色</span><span>{{ detailUser.role }}</span></div>
+          <div class="detail-readonly-item"><span class="detail-form-label">状态</span><span><el-tag :type="detailUser.stateType" size="small">{{ detailUser.state }}</el-tag></span></div>
+          <div class="detail-form-footer">
+            <el-button @click="closePanel">关闭</el-button>
+            <el-button type="primary" @click="openEditFromDetail">编辑</el-button>
+          </div>
+        </div>
+      </div>
+
       <!-- 空状态：提示选择操作 -->
-      <div v-if="panelMode === 'none'" class="surface-card side-panel-mod detail-panel detail-panel-empty">
+      <div v-else-if="panelMode === 'none'" class="surface-card side-panel-mod detail-panel detail-panel-empty">
         <p class="detail-panel-hint">在左侧表格选择操作：</p>
         <ul class="detail-panel-actions">
           <li><strong>编辑</strong> — 修改账号基本信息（姓名、部门、岗位、状态等）</li>
           <li><strong>授权</strong> — 为该账号分配角色，角色已与路由绑定，分配后即拥有对应菜单</li>
         </ul>
         <el-button type="primary" link class="detail-panel-link" @click="panelMode = 'roleMenuConfig'; selectedRoleForMenu = ''">
-          配置各角色可见菜单
+          配置各角色授权菜单
         </el-button>
         <p class="detail-panel-tip">教学视频等任务下发时，勾选角色即可推送给该角色下所有用户。</p>
       </div>
@@ -133,7 +156,7 @@
         </el-form>
       </div>
 
-      <!-- 授权：直接勾选该用户可见菜单（不通过角色） -->
+      <!-- 授权：直接勾选该用户授权菜单（不通过角色） -->
       <div v-else-if="panelMode === 'authorize'" class="surface-card side-panel-mod detail-panel">
         <div class="detail-panel-head">
           <h3 class="side-panel-title">授权</h3>
@@ -147,7 +170,10 @@
               <span>{{ authorizeUser.name }}</span>
               <span class="muted">（{{ authorizeUser.idNo }}）</span>
             </el-form-item>
-            <el-form-item label="可见菜单">
+            <el-form-item>
+              <span class="detail-form-label">授权菜单</span>
+            </el-form-item>
+            <el-form-item>
               <el-checkbox-group v-model="authorizeMenuChecked" class="role-menu-checkgroup">
                 <div v-for="item in navItems" :key="item.routeName" class="role-menu-checkitem">
                   <el-checkbox :label="item.routeName">{{ item.name }}</el-checkbox>
@@ -162,10 +188,10 @@
         </div>
       </div>
 
-      <!-- 配置各角色可见菜单 -->
+      <!-- 配置各角色授权菜单 -->
       <div v-else-if="panelMode === 'roleMenuConfig'" class="surface-card side-panel-mod detail-panel">
         <div class="detail-panel-head">
-          <h3 class="side-panel-title">配置各角色可见菜单</h3>
+          <h3 class="side-panel-title">配置各角色授权菜单</h3>
           <el-button link type="info" @click="closePanel">关闭</el-button>
         </div>
         <p class="detail-panel-desc">勾选该角色可访问的菜单（对应路由），保存后该角色下的用户侧栏与顶栏只显示已选菜单。下发任务时勾选角色即可覆盖该角色下所有人。</p>
@@ -193,6 +219,7 @@
 
 <script setup>
 import { reactive, ref, computed, watch } from 'vue'
+import { ElMessage } from 'element-plus'
 import { useRoleMenus } from '@/composables/useRoleMenus'
 
 const { navItems, getMenusByRole, setRoleMenus, getUserMenus, setUserMenus } = useRoleMenus()
@@ -219,8 +246,9 @@ const total = 2485
 const currentPage = ref(1)
 const pageSize = ref(10)
 
-const panelMode = ref('none') // 'none' | 'edit' | 'authorize' | 'roleMenuConfig'
+const panelMode = ref('none') // 'none' | 'detail' | 'edit' | 'authorize' | 'roleMenuConfig'
 const selectedUser = ref(null)
+const detailUser = ref(null)
 const authorizeUser = ref(null)
 const authorizeMenuChecked = ref([])
 const selectedRoleForMenu = ref('')
@@ -238,6 +266,19 @@ const editForm = reactive({
 watch(selectedRoleForMenu, (role) => {
   if (role) roleMenuChecked.value = [...getMenusByRole(role)]
 }, { immediate: true })
+
+function onRowClick(row) {
+  detailUser.value = row
+  panelMode.value = 'detail'
+}
+
+function openEditFromDetail() {
+  if (detailUser.value) openEdit(detailUser.value)
+}
+
+function onResetPassword(row) {
+  ElMessage.success('密码重置成功')
+}
 
 function openEdit(row) {
   selectedUser.value = row
@@ -293,6 +334,7 @@ function onDelete(row) {
 function closePanel() {
   panelMode.value = 'none'
   selectedUser.value = null
+  detailUser.value = null
   authorizeUser.value = null
   selectedRoleForMenu.value = ''
 }

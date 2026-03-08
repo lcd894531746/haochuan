@@ -57,6 +57,7 @@
             <strong>周凯</strong>
             <span>一级建造师</span>
           </div>
+          <button type="button" class="shell-logout-btn" @click="handleLogout">退出系统</button>
         </div>
       </div>
 
@@ -68,13 +69,18 @@
 </template>
 
 <script setup>
-import { RouterLink, RouterView, useRoute } from 'vue-router'
+import { RouterLink, RouterView, useRoute, useRouter } from 'vue-router'
 import { ref, computed } from 'vue'
 import { useRoleMenus } from '@/composables/useRoleMenus'
 import haochuanLogo from '@/assets/brand/haochuan-logo.png'
 
 const route = useRoute()
+const router = useRouter()
 const sidebarCollapsed = ref(false)
+
+function handleLogout() {
+  router.push({ name: 'login' })
+}
 
 // 当前登录用户（演示用，实际从登录态或接口获取）
 const currentUserRole = ref('系统管理员')

@@ -39,7 +39,7 @@ select {
 }
 
 :root {
-  --shell-bg: rgba(248, 253, 255, 0.86);
+  /* --shell-bg: rgba(248, 253, 255, 0.86); */
   --shell-bg-strong: #ffffff;
   --shell-line: rgba(11, 74, 101, 0.18);
   --shell-text: #0f2431;
@@ -64,15 +64,16 @@ select {
 
 .shell-sidebar {
   padding: 28px 22px;
-  border-right: 1px solid rgba(255, 255, 255, 0.08);
+  border-right: 1px solid rgba(255, 255, 255, 0.15);
   background:
-    linear-gradient(180deg, rgba(9, 70, 96, 0.96), rgba(8, 49, 68, 0.98)),
-    rgba(9, 70, 96, 0.96);
+    linear-gradient(160deg, rgba(18, 95, 130, 0.98) 0%, rgba(14, 72, 98, 0.96) 40%, rgba(22, 110, 145, 0.94) 100%),
+    linear-gradient(180deg, rgba(60, 150, 185, 0.12) 0%, transparent 50%);
   color: #eaf7fd;
   display: flex;
   flex-direction: column;
   gap: 24px;
   min-height: 0;
+  box-shadow: inset -1px 0 0 rgba(255, 255, 255, 0.06);
 }
 
 .platform-shell.collapsed .shell-sidebar {
@@ -90,7 +91,7 @@ select {
   width: 160px;
   max-width: 100%;
   object-fit: contain;
-  filter: brightness(1.08);
+  filter: brightness(1.15);
 }
 
 .platform-shell.collapsed .brand-logo {
@@ -105,7 +106,7 @@ select {
 .brand-subtitle {
   margin-top: 4px;
   font-size: 12px;
-  color: rgba(234, 247, 253, 0.74);
+  color: rgba(234, 247, 253, 0.88);
 }
 
 .shell-nav {
@@ -121,9 +122,10 @@ select {
   gap: 12px;
   padding: 12px 14px;
   border-radius: 14px;
-  color: rgba(234, 247, 253, 0.8);
+  color: rgba(250, 253, 255, 0.92);
   text-decoration: none;
-  transition: 0.2s ease;
+  transition: 0.22s ease;
+  border-left: 3px solid transparent;
 }
 
 .platform-shell.collapsed .shell-nav-item {
@@ -133,9 +135,11 @@ select {
 }
 
 .shell-nav-item:hover,
-.shell-nav-item.router-link-active {
-  background: rgba(115, 200, 228, 0.14);
-  color: #f7fdff;
+.shell-nav-item.router-link-exact-active {
+  background: rgba(115, 200, 228, 0.22);
+  color: #ffffff;
+  border-left-color: #7dd4f0;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1);
 }
 
 .shell-nav-icon {
@@ -144,16 +148,19 @@ select {
   border-radius: 10px;
   display: grid;
   place-items: center;
-  background: rgba(115, 200, 228, 0.12);
+  background: rgba(125, 212, 240, 0.2);
   font-size: 12px;
   letter-spacing: 0.08em;
+  color: #a8e6f5;
+  font-weight: 600;
 }
 
 .shell-side-card {
   padding: 18px;
   border-radius: 22px;
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(115, 200, 228, 0.12);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.06) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
 }
 
 .shell-side-card h3 {
@@ -177,8 +184,9 @@ select {
   display: grid;
   place-items: center;
   background:
-    radial-gradient(circle, rgba(8, 49, 68, 0.95) 53%, transparent 54%),
-    conic-gradient(#78d3e8 0 78%, rgba(255, 255, 255, 0.12) 78% 100%);
+    radial-gradient(circle, rgba(14, 65, 90, 0.92) 53%, transparent 54%),
+    conic-gradient(#7dd4f0 0 78%, rgba(255, 255, 255, 0.2) 78% 100%);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
 }
 
 .shell-ring strong {
@@ -189,7 +197,12 @@ select {
 
 .shell-ring span,
 .shell-note {
-  color: rgba(234, 247, 253, 0.78);
+  color: rgba(234, 247, 253, 0.9);
+}
+
+.shell-side-card .shell-kicker {
+  color: #8edef5;
+  font-weight: 600;
 }
 
 .shell-main {
@@ -255,9 +268,27 @@ select {
   margin-left: auto;
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 14px;
   padding-left: 12px;
   flex: 0 0 auto;
+}
+
+.shell-logout-btn {
+  padding: 8px 16px;
+  border-radius: 12px;
+  border: 1px solid rgba(17, 111, 152, 0.2);
+  background: rgba(255, 255, 255, 0.7);
+  color: #2a587a;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.shell-logout-btn:hover {
+  background: rgba(17, 111, 152, 0.08);
+  color: var(--shell-brand-deep);
+  border-color: rgba(17, 111, 152, 0.3);
 }
 
 .shell-user-avatar {

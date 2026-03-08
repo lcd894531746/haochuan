@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory } from 'vue-router'
+import { createRouter, createWebHashHistory } from 'vue-router'
 import PlatformLayout from '@/layouts/PlatformLayout.vue'
 import Dashboard from '@/views/Dashboard.vue'
 import Login from '@/views/Login.vue'
@@ -15,6 +15,10 @@ import PersonalCenter from '@/views/PersonalCenter.vue'
 
 const routes = [
   {
+    path: '/',
+    redirect: '/login',
+  },
+  {
     path: '/login',
     name: 'login',
     component: Login,
@@ -24,7 +28,7 @@ const routes = [
     },
   },
   {
-    path: '/',
+    path: '/home',
     component: PlatformLayout,
     children: [
       {
@@ -142,6 +146,6 @@ const routes = [
 ]
 
 export default createRouter({
-  history: createWebHistory(import.meta.env.BASE_URL),
+  history: createWebHashHistory(import.meta.env.BASE_URL),
   routes,
 })

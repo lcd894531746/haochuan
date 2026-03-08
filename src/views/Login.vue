@@ -68,8 +68,7 @@
           </el-form>
 
           <div class="login-actions">
-            <el-button type="primary" size="large" class="login-submit">登录系统</el-button>
-            <RouterLink class="login-link" :to="{ name: 'dashboard' }">查看原型首页</RouterLink>
+            <el-button type="primary" size="large" class="login-submit" @click="handleLogin">登录系统</el-button>
           </div>
 
           <div class="first-login-panel">
@@ -94,13 +93,18 @@
 
 <script setup>
 import { reactive } from 'vue'
-import { RouterLink } from 'vue-router'
+import { useRouter } from 'vue-router'
 import haochuanLogo from '@/assets/brand/haochuan-logo.png'
 
+const router = useRouter()
 const form = reactive({
   idNo: '',
   password: '',
 })
+
+function handleLogin() {
+  router.push({ name: 'dashboard' })
+}
 
 const flow = [
   { step: '01', title: '培训资料上传', desc: '课程、视频、题库与证书模板统一维护。' },
